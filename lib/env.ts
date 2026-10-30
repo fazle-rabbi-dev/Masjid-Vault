@@ -11,4 +11,8 @@ function required(key: string): string {
 export const env = {
   DATABASE_URL: required("DATABASE_URL"),
   NODE_ENV: process.env.NODE_ENV ?? "development",
+  ADMIN_USERNAME: required("ADMIN_USERNAME"),
+  ADMIN_PASSWORD: required("ADMIN_PASSWORD"),
+  JWT_ACCESS_SECRET: required("JWT_ACCESS_SECRET"),
+  JWT_REFRESH_SECRET: required("JWT_REFRESH_SECRET"),
 }

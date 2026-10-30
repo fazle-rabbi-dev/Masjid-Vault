@@ -1,0 +1,45 @@
+import {
+  BookOpen,
+  CheckCheck,
+  FileText,
+  History,
+  LayoutDashboard,
+  Receipt,
+  Settings,
+  UserCog,
+  Users,
+  type LucideIcon,
+} from "lucide-react"
+
+export type NavItem = {
+  title: string
+  href: string
+  icon: LucideIcon
+  adminOnly?: boolean
+  enabled: boolean
+}
+
+// Routes are enabled as each chapter is built.
+export const navItems: NavItem[] = [
+  { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard, enabled: true },
+  { title: "Register", href: "/register", icon: BookOpen, enabled: false },
+  { title: "People", href: "/people", icon: Users, enabled: false },
+  { title: "Expenses", href: "/expenses", icon: Receipt, enabled: false },
+  { title: "History", href: "/history", icon: History, enabled: false },
+  { title: "Reports", href: "/reports", icon: FileText, enabled: false },
+  {
+    title: "Members",
+    href: "/members",
+    icon: UserCog,
+    adminOnly: true,
+    enabled: false,
+  },
+  {
+    title: "Approvals",
+    href: "/approvals",
+    icon: CheckCheck,
+    adminOnly: true,
+    enabled: false,
+  },
+  { title: "Settings", href: "/settings", icon: Settings, enabled: false },
+]

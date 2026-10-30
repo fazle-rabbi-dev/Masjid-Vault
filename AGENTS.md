@@ -40,6 +40,7 @@
 - Im a perfectionist, but now trying to become minimalist and keep things simple and want to kill perfectionism and ship faster. So, don't make me confuse when answering questions.
 - Do not over-engineer stuffs, keep it simple always by focusing only what matters most, and implement stufss in easy way when possible instead of over-engineering.
 - Separate pkg import and custom file import by leaving a blank line between them
+- UI primitives are built on Base UI (not Radix), so composition differs in some cases (use `render` instead of `asChild`, `DropdownMenuLabel` needs a `DropdownMenuGroup`, pass `nativeButton` when rendering a real `<button>`, etc.).
 - When do linting/type check than only check on the changed files
 - Do not write console.log() instead use custom logger that available at `src/lib/logger.ts`
 - When to many code in a file write good `comment` for readability; especially for the large jsx code
@@ -55,9 +56,11 @@
 
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 Also refer to: [Nextjs 16 Pattern](.agents/skills/ui-design/references/nextjs-16-pattern.md)
 

@@ -36,3 +36,10 @@ export function formatDateTime(date: Date) {
     minute: "2-digit",
   }).format(date)
 }
+
+export function toDateInputValue(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}-${String(date.getDate()).padStart(2, "0")}`
+}

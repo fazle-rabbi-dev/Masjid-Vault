@@ -90,3 +90,7 @@ export async function clearSession() {
   cookieStore.delete(ACCESS_COOKIE)
   cookieStore.delete(REFRESH_COOKIE)
 }
+
+export function canWrite(role: Role) {
+  return role === "ADMIN" || role === "READ_WRITE"
+}

@@ -1,3 +1,6 @@
+"use client"
+
+import { usePathname } from "next/navigation"
 import { ChevronDown, Landmark, LogOut } from "lucide-react"
 
 import { logoutAction } from "@/app/actions/auth"
@@ -16,16 +19,22 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { roleLabels, type Session } from "@/constants/auth"
+import { navItems } from "@/constants/navigation"
 
 export function AppHeader({ session }: { session: Session }) {
+  const pathname = usePathname()
   const roleLabel = roleLabels[session.role]
   const showRole = roleLabel !== session.name
+  const pageTitle =
+    navItems.find(
+      (item) => pathname === item.href || pathname.startsWith(`${item.href}/`)
+    )?.title ?? "Masjid Vault"
 
   return (
     <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background/80 px-4 backdrop-blur">
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mr-1 h-4" />
-      <p className="truncate text-sm font-medium">Dashboard</p>
+      <p className="truncate text-sm font-medium">{pageTitle}</p>
 
       <div className="ml-auto flex-center gap-1">
         <ThemeToggle />

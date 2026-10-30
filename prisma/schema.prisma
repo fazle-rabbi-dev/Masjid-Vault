@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Member accounts created by the admin. The admin itself lives in env vars.
+// permission: "READ_ONLY" | "READ_WRITE"
+// status: "ACTIVE" | "INACTIVE"
+model Member {
+  id           String            @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  username     String            @unique
+  passwordHash String
+  permission   String            @default("READ_ONLY")
+  status       String            @default("ACTIVE")
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  requests     ApprovalRequest[] @relation("MemberRequests")
+}
+
+// People who contribute to the mosque fund.
+model Person {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  monthlyAmount  Int            @default(0) // promised monthly amount in BDT
+  active         Boolean        @default(true)
+  note           String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  contributions  Contribution[]
+
+  @@index([active])
+}
+
+// One row per received payment. Collection month and received date are kept separate.
+model Contribution {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  personId        String   @db.ObjectId
+  collectionYear  Int
+  collectionMonth Int // 1-12
+  amount          Int // BDT
+  receivedAt      DateTime
+  note            String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  person Person @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@index([collectionYear, collectionMonth])
+  @@index([personId])
+}
+
+model Expense {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  amount    Int // BDT
+  date      DateTime
+  category  String
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+}
+
+// Every write request submitted by a member waits here for admin review.
+// operation: "CREATE" | "UPDATE" | "DELETE"
+// entity: "CONTRIBUTION" | "EXPENSE" | "PERSON"
+// status: "PENDING" | "APPROVED" | "REJECTED"
+model ApprovalRequest {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  memberId    String    @db.ObjectId
+  operation   String
+  entity      String
+  entityId    String? // target record id for UPDATE/DELETE
+  payload     Json? // proposed values
+  previous    Json? // snapshot before the change
+  status      String    @default("PENDING")
+  requestNote String?
+  reviewNote  String?
+  reviewedBy  String? // "admin" or member id
+  requestedAt DateTime  @default(now())
+  reviewedAt  DateTime?
+
+  member Member @relation("MemberRequests", fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([status, requestedAt])
+  @@index([memberId])
+}
+
+// Single document holding app-wide settings such as the current collection month.
+model AppSettings {
+  id                     String   @id @default("global") @map("_id")
+  currentCollectionYear  Int
+  currentCollectionMonth Int // 1-12
+  updatedAt              DateTime @updatedAt
+}

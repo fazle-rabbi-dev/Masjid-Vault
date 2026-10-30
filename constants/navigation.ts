@@ -23,7 +23,7 @@ export type NavItem = {
 export const navItems: NavItem[] = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard, enabled: true },
   { title: "Register", href: "/register", icon: BookOpen, enabled: true },
-  { title: "People", href: "/people", icon: Users, enabled: false },
+  { title: "People", href: "/people", icon: Users, enabled: true },
   { title: "Expenses", href: "/expenses", icon: Receipt, enabled: false },
   { title: "History", href: "/history", icon: History, enabled: false },
   { title: "Reports", href: "/reports", icon: FileText, enabled: false },

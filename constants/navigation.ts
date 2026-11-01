@@ -21,7 +21,12 @@ export type NavItem = {
 
 // Routes are enabled as each chapter is built.
 export const navItems: NavItem[] = [
-  { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard, enabled: true },
+  {
+    title: "Dashboard",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+    enabled: true,
+  },
   { title: "Register", href: "/register", icon: BookOpen, enabled: true },
   { title: "People", href: "/people", icon: Users, enabled: true },
   { title: "Expenses", href: "/expenses", icon: Receipt, enabled: true },
@@ -32,7 +37,7 @@ export const navItems: NavItem[] = [
     href: "/members",
     icon: UserCog,
     adminOnly: true,
-    enabled: false,
+    enabled: true,
   },
   {
     title: "Approvals",

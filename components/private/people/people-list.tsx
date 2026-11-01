@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { AlertCircle, Pencil, Plus, Trash2, UserX } from "lucide-react"
+import { AlertCircle, Info, Pencil, Plus, Trash2, UserX } from "lucide-react"
 
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -30,7 +31,15 @@ type Person = {
   note: string | null
 }
 
-export function PeopleList({ people }: { people: Person[] }) {
+export function PeopleList({
+  people,
+  canWrite,
+  needsApproval,
+}: {
+  people: Person[]
+  canWrite: boolean
+  needsApproval: boolean
+}) {
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState<Person | null>(null)
   const [deleting, setDeleting] = useState<Person | null>(null)
@@ -54,33 +63,45 @@ export function PeopleList({ people }: { people: Person[] }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger render={<Button />}>
-            <Plus className="size-4" /> Add person
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add person</DialogTitle>
-            </DialogHeader>
-            <form action={handleCreate} className="space-y-3">
-              <div className="space-y-1">
-                <Label>Name</Label>
-                <Input name="name" required />
-              </div>
-              <div className="space-y-1">
-                <Label>Monthly amount</Label>
-                <Input name="monthlyAmount" type="number" defaultValue={0} />
-              </div>
-              <div className="space-y-1">
-                <Label>Note</Label>
-                <Input name="note" />
-              </div>
-              <Button type="submit">Save</Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
+      {needsApproval ? (
+        <Alert>
+          <Info className="size-4" />
+          <AlertDescription>
+            Your changes are sent to the admin for approval and take effect only
+            after they are approved.
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
+      {canWrite ? (
+        <div className="flex justify-end">
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger render={<Button />}>
+              <Plus className="size-4" /> Add person
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add person</DialogTitle>
+              </DialogHeader>
+              <form action={handleCreate} className="space-y-3">
+                <div className="space-y-1">
+                  <Label>Name</Label>
+                  <Input name="name" required />
+                </div>
+                <div className="space-y-1">
+                  <Label>Monthly amount</Label>
+                  <Input name="monthlyAmount" type="number" defaultValue={0} />
+                </div>
+                <div className="space-y-1">
+                  <Label>Note</Label>
+                  <Input name="note" />
+                </div>
+                <Button type="submit">Save</Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
+      ) : null}
 
       <ul className="divide-y divide-foreground/10 rounded-xl bg-card p-4 ring-1 ring-foreground/10">
         {people.map((person) => (
@@ -95,30 +116,32 @@ export function PeopleList({ people }: { people: Person[] }) {
                 {formatCurrency(person.monthlyAmount)}/month
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => setEditing(person)}
-              >
-                <Pencil className="size-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => togglePerson(person.id, !person.active)}
-              >
-                <UserX className="size-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                className="text-destructive hover:bg-destructive/10"
-                onClick={() => setDeleting(person)}
-              >
-                <Trash2 className="size-4" />
-              </Button>
-            </div>
+            {canWrite ? (
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => setEditing(person)}
+                >
+                  <Pencil className="size-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => togglePerson(person.id, !person.active)}
+                >
+                  <UserX className="size-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  className="text-destructive hover:bg-destructive/10"
+                  onClick={() => setDeleting(person)}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </div>
+            ) : null}
           </li>
         ))}
       </ul>

@@ -27,7 +27,9 @@ export async function loginAction(
     redirect("/dashboard")
   }
 
-  const member = await prisma.member.findUnique({ where: { username } })
+  const member = await prisma.member.findUnique({
+    where: { username: username.toLowerCase() },
+  })
 
   if (
     !member ||

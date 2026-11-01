@@ -1,7 +1,12 @@
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
-import type { Role, Session, SessionPayload } from "@/constants/auth"
+import type {
+  MemberPermission,
+  Role,
+  Session,
+  SessionPayload,
+} from "@/constants/auth"
 import {
   ACCESS_COOKIE,
   ACCESS_TOKEN_MAX_AGE,
@@ -9,6 +14,7 @@ import {
   REFRESH_TOKEN_MAX_AGE,
   cookieOptions,
 } from "@/lib/auth-constants"
+import { prisma } from "@/lib/db"
 import { env } from "@/lib/env"
 import { signToken, verifyToken } from "@/lib/jwt"
 
@@ -53,10 +59,35 @@ export async function createSession(session: Session) {
   })
 }
 
-function toSession(payload: SessionPayload | null): Session | null {
-  if (!payload || !roles.includes(payload.role)) return null
+// The admin lives in env vars, never in the database.
+const ADMIN_ID = "admin"
 
-  return { id: payload.sub, name: payload.name, role: payload.role }
+function isAdminId(id: string) {
+  return id === ADMIN_ID
+}
+
+// Member roles/status are re-read from the database so deactivating a member or
+// changing their permission takes effect immediately, not after the token expires.
+async function resolveSession(
+  payload: SessionPayload | null
+): Promise<Session | null> {
+  if (!payload) return null
+
+  if (isAdminId(payload.sub)) {
+    return payload.role === "ADMIN"
+      ? { id: ADMIN_ID, name: "Admin", role: "ADMIN" }
+      : null
+  }
+
+  const member = await prisma.member.findUnique({ where: { id: payload.sub } })
+  if (!member || member.status !== "ACTIVE") return null
+  if (!roles.includes(member.permission as Role)) return null
+
+  return {
+    id: member.id,
+    name: member.name,
+    role: member.permission as MemberPermission,
+  }
 }
 
 export async function getSession(): Promise<Session | null> {
@@ -66,20 +97,22 @@ export async function getSession(): Promise<Session | null> {
     cookieStore.get(ACCESS_COOKIE)?.value,
     env.JWT_ACCESS_SECRET
   )
-  if (access?.type === "access") return toSession(access)
+  if (access?.type === "access") return resolveSession(access)
 
   const refresh = verifyToken<SessionPayload>(
     cookieStore.get(REFRESH_COOKIE)?.value,
     env.JWT_REFRESH_SECRET
   )
-  if (refresh?.type === "refresh") return toSession(refresh)
+  if (refresh?.type === "refresh") return resolveSession(refresh)
 
   return null
 }
 
 export async function requireSession(): Promise<Session> {
   const session = await getSession()
-  if (!session) redirect("/")
+  // Go through a route handler so stale cookies get cleared before redirecting.
+  // Redirecting straight to "/" would bounce back here while the cookie lives.
+  if (!session) redirect("/session/expired")
 
   return session
 }

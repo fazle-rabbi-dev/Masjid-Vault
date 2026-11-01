@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import {
   CalendarDays,
   CheckCheck,
@@ -87,8 +88,13 @@ export default async function DashboardPage() {
             {data.pendingApprovals === 1 ? "request" : "requests"}
           </AlertTitle>
           <AlertDescription>
-            Member submitted changes waiting for your review. The approvals page
-            is coming in a later step.
+            Member submitted changes waiting for your review.{" "}
+            <Link
+              href="/approvals"
+              className="font-medium text-foreground underline underline-offset-4"
+            >
+              Open approvals
+            </Link>
           </AlertDescription>
         </Alert>
       ) : null}

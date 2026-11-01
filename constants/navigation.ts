@@ -44,7 +44,7 @@ export const navItems: NavItem[] = [
     href: "/approvals",
     icon: CheckCheck,
     adminOnly: true,
-    enabled: false,
+    enabled: true,
   },
   { title: "Settings", href: "/settings", icon: Settings, enabled: false },
 ]

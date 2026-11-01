@@ -26,7 +26,7 @@ export const navItems: NavItem[] = [
   { title: "People", href: "/people", icon: Users, enabled: true },
   { title: "Expenses", href: "/expenses", icon: Receipt, enabled: true },
   { title: "History", href: "/history", icon: History, enabled: true },
-  { title: "Reports", href: "/reports", icon: FileText, enabled: false },
+  { title: "Reports", href: "/reports", icon: FileText, enabled: true },
   {
     title: "Members",
     href: "/members",

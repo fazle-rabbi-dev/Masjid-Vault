@@ -46,5 +46,5 @@ export const navItems: NavItem[] = [
     adminOnly: true,
     enabled: true,
   },
-  { title: "Settings", href: "/settings", icon: Settings, enabled: false },
+  { title: "Settings", href: "/settings", icon: Settings, enabled: true },
 ]

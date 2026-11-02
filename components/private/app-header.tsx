@@ -1,11 +1,11 @@
 "use client"
 
 import { usePathname } from "next/navigation"
-import { ChevronDown, Landmark, LogOut } from "lucide-react"
+import { ChevronDown, LogOut } from "lucide-react"
 
 import { logoutAction } from "@/app/actions/auth"
+import { AppLogo } from "@/components/shared/app-logo"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { buttonVariants } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -44,11 +44,7 @@ export function AppHeader({ session }: { session: Session }) {
               className: "h-9 gap-2 px-2",
             })}
           >
-            <Avatar className="size-7">
-              <AvatarFallback className="bg-primary text-primary-foreground">
-                <Landmark className="size-3.5" />
-              </AvatarFallback>
-            </Avatar>
+            <AppLogo className="size-7" />
             <div className="hidden text-left leading-tight sm:block">
               <p className="max-w-32 truncate text-sm font-medium">
                 {session.name}

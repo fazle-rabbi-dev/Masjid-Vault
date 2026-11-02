@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
-import { Landmark } from "lucide-react"
 
+import { AppLogo } from "@/components/shared/app-logo"
 import { LoginForm } from "@/components/public/login/login-form"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
 import {
@@ -33,9 +33,7 @@ export default function LoginPage() {
 
       <div className="w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center text-center">
-          <div className="flex-center size-12 justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-            <Landmark className="size-6" />
-          </div>
+          <AppLogo className="size-12 rounded-xl shadow-sm" />
           <h1 className="heading-2 mt-4">Masjid Vault</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Mosque fund management

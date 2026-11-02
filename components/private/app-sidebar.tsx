@@ -2,8 +2,8 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Landmark } from "lucide-react"
 
+import { AppLogo } from "@/components/shared/app-logo"
 import type { Role } from "@/constants/auth"
 import { navItems } from "@/constants/navigation"
 import {
@@ -30,9 +30,7 @@ export function AppSidebar({ role }: { role: Role }) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" render={<Link href="/dashboard" />}>
-              <div className="flex-center size-8 shrink-0 justify-center rounded-lg bg-primary text-primary-foreground">
-                <Landmark className="size-4" />
-              </div>
+              <AppLogo className="size-8" />
               <div className="grid flex-1 text-left leading-tight">
                 <span className="truncate font-semibold">Masjid Vault</span>
                 <span className="truncate text-xs text-muted-foreground">

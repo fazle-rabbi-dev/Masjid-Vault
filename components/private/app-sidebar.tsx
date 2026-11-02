@@ -18,18 +18,29 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 export function AppSidebar({ role }: { role: Role }) {
   const pathname = usePathname()
+  const { isMobile, setOpenMobile } = useSidebar()
   const items = navItems.filter((item) => !item.adminOnly || role === "ADMIN")
+
+  // Close the mobile sheet after navigating to a link.
+  function closeOnNavigate() {
+    if (isMobile) setOpenMobile(false)
+  }
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<Link href="/dashboard" />}>
+            <SidebarMenuButton
+              size="lg"
+              render={<Link href="/dashboard" />}
+              onClick={closeOnNavigate}
+            >
               <AppLogo className="size-8" />
               <div className="grid flex-1 text-left leading-tight">
                 <span className="truncate font-semibold">Masjid Vault</span>
@@ -54,6 +65,7 @@ export function AppSidebar({ role }: { role: Role }) {
                       render={<Link href={item.href} />}
                       isActive={pathname === item.href}
                       tooltip={item.title}
+                      onClick={closeOnNavigate}
                     >
                       <item.icon />
                       <span>{item.title}</span>

@@ -82,7 +82,7 @@ export default async function SettingsPage() {
 
       <section className="space-y-2 rounded-xl border p-4">
         <h2 className="heading-4">Account</h2>
-        <p className="text-sm">Signed in as {session.username}</p>
+        <p className="text-sm">Signed in as {session.name}</p>
         <p className="text-sm text-muted-foreground">Role: {session.role}</p>
       </section>
     </main>
